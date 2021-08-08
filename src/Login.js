@@ -15,10 +15,11 @@ function Login() {
         }
         auth.createUserWithEmailAndPassword(email, password)
             .then((userAuth) => {
-                userAuth.user.updateProfile({
-                    displayName: name,
-                    photoUrl: profilePic,
-                })
+                userAuth.user
+                    .updateProfile({
+                        displayName: name,
+                        photoUrl: profilePic,
+                    })
                     .then(() => {
                         dispatch(
                             login({
@@ -29,10 +30,22 @@ function Login() {
                             })
                         )
                     })
-            }).catch((error) => alert(error.message));
+            }).catch((error) => alert(error));
     };//3:13:00 here stops
     const loginToApp = (e) => {
-        e.preventDefailt();
+        e.preventDefault();
+
+        auth.signInWithEmailAndPassword(email, password)
+            .then((userAuth) => {
+                dispatch(
+                    login({
+                        email: userAuth.user.email,
+                        uid: userAuth.user.uid,
+                        displayName: userAuth.user.displayName,
+                        photoUrl: userAuth.user.photoUrl,
+                    })
+                );
+            }).catch((error) => alert(error));
     };
     return (
         <div className="login">
